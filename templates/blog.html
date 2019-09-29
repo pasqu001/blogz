@@ -5,8 +5,10 @@
 <h1>Blog posts</h1>
 <ul>
     {% for post in posts %}
-    <li>{{post.title}}</li>
-    <li>{{post.body}}</li>
+    <li>
+        <h1><a href="/blog?id={{ post.id }}">{{post.title}}</a></h1>
+        <p>{{post.body}}</p>
+    </li>
     <hr />
     {% endfor %}
 </ul>

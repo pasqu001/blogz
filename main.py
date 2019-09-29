@@ -18,10 +18,17 @@ class Blog(db.Model):
     def __init__(self, title, body):
         self.title = title    
         self.body = body
-
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/')
 def index():
+    return redirect('/blog')
 
+
+@app.route('/blog')
+def blog():
+    blog_id = request.args.get('id')
+    if (blog_id):
+        post = Blog.query.get(blog_id)
+        return render_template('post.html', title="Blog Entry", post=post)
     posts = Blog.query.all()
     return render_template('blog.html',title="BLOG-MANIA",
         posts=posts)

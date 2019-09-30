@@ -2,20 +2,12 @@
 <html>
     <head>
         <title>{{title}}</title>
-        <style>
-            #text{
-                min-width:43%;
-                height: 40%
-            }
-            .error{
-                color:red;
-            }
-        </style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
     </head>
 <body>
-    <div>
-        <a href='/'>Blog Posts</a>
-        <a href='/newpost'>Create Post</a>
+    <div class='head_page'>
+        <a class='travel' href='/blog'>Blog Posts</a>
+        <a class='travel' href='/newpost'>Create Post</a>
     </div>
     {% with messages = get_flashed_messages(with_categories=True) %}
     <ul>

@@ -46,7 +46,11 @@ def newpost():
             new_post = Blog(title, body)
             db.session.add(new_post)
             db.session.commit()
-            return redirect('/')
+            post =  {
+                    "title": title,
+                    "body": body
+                    }
+            return render_template('post.html', post=post)
     else:
         return render_template('newpost.html', title="New Post")
 if __name__ == '__main__':

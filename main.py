@@ -38,7 +38,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -52,6 +52,8 @@ def index():
 
 @app.route('/blog')
 def blog():
+   
+
     blog_id = request.args.get('id')
     if (blog_id):
         post = Blog.query.get(blog_id)

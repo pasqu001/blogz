@@ -8,6 +8,9 @@
     <div class='head_page'>
         <a class='travel' href='/blog'>Blog Posts</a>
         <a class='travel' href='/newpost'>Create Post</a>
+        {% if 'username' in session %}
+            <a class='travel' href='/logout'>Logout</a>
+        {% endif %}   
     </div>
     {% with messages = get_flashed_messages(with_categories=True) %}
     <ul>

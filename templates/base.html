@@ -10,6 +10,7 @@
         <a class='travel' href='/newpost'>Create Post</a>
         {% if 'username' in session %}
             <a class='travel' href='/logout'>Logout</a>
+            <a class='travel' href='/userposts'>User Posts</a>
         {% endif %}   
     </div>
     {% with messages = get_flashed_messages(with_categories=True) %}

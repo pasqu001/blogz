@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
-
+from hashutils import make_pw_hash, check_pw_hash
+import pdb
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -27,12 +28,12 @@ class Blog(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
-    password = db.Column(db.String(20))
+    pw_hash = db.Column(db.String(120))
     blogs = db.relationship('Blog', backref='owner')
 
     def __init__(self, username, password):
         self.username = username    
-        self.password = password
+        self.pw_hash = make_pw_hash(password)
 
 #Checking for session
 
@@ -61,6 +62,18 @@ def blog():
     posts = Blog.query.all()
     return render_template('blog.html',title="BLOG-MANIA",
         posts=posts)
+
+
+@app.route('/userposts')
+def singleUser():
+
+    active_user = session['username']
+    active = User.query.filter_by(username = active_user ).first()
+    posts = Blog.query.filter_by(owner_id = active.id).all()
+
+    return render_template('singleUser.html', title="User Posts", posts=posts)
+
+
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -109,6 +122,7 @@ def signup():
         else:
             general_err = general_err + "username or password cannot be blank. "
         if not general_err:
+            # pass_hash = make_pw_hash(password)
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
@@ -128,16 +142,15 @@ def login():
         password = request.form['password']
         active_user = User.query.filter_by(username=username).first()
         general_err = ''
-        if active_user and active_user.password == password:
+        print(f"{active_user} {active_user.pw_hash}")
+        print(f"{make_pw_hash(password)}")
+        if active_user and check_pw_hash(password, active_user.pw_hash):
             flash('Logged In')
             session['username']=username
             return redirect('/newpost')
-        elif active_user:
-            if active_user.password != password:
-                general_err = general_err + " Password is Incorrect. "
         else: 
-             general_err = general_err + 'User does not exist. Create an account. '
-        flash(general_err, 'error')
+            general_err = 'User does not exist or Password not correct. '
+            flash(general_err, 'error')
         return render_template('/login.html')
     
     return render_template('login.html')

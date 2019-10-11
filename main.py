@@ -156,6 +156,12 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/posts/<int:page_num>')
+def post(page_num):
+    posts = Blog.query.paginate(per_page=4, page=page_num, error_out=True)
+    #error_out means that the page will 404 error if set to True it will desplay an empty page. 
+    return render_template('paginate.html', posts=posts)
+
 @app.route('/logout')
 def logout():
     del session['username']

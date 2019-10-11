@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for post in posts.items %}
+<div>
+    <h2>{{post.title}}</h2>
+    <p>{{post.body}}</p>
+    <hr>
+</div>
+{% endfor %}
+<div>
+    {% for page in posts.iter_pages() %}
+    {% if page %}
+    <a href="{{ url_for('post', page_num=page) }}">{{page}}</a>
+    {% else %}
+        ...
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
